@@ -1,4 +1,22 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:conda",
-    "python-envs.defaultPackageManager": "ms-python.python:conda"
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+
+    
+    "files.watcherExclude": {
+        "**/data/clips/**": true,
+        "**/.venv/**": true,
+        "**/checkpoints/**": true
+    },
+    "search.exclude": {
+        "**/data/clips/**": true,
+        "**/.venv/**": true,
+        "**/checkpoints/**": true
+    },
+    "python.analysis.exclude": [
+        "**/data/clips/**",
+        "**/.venv/**",
+        "**/checkpoints/**"
+    ]
+
 }
