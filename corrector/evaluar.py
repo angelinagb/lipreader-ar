@@ -1,15 +1,10 @@
 """
-Evalúa el corrector: CER y WER antes y después de corregir.
+Evalua el corrector: CER y WER antes y después de corregir
 
-Uso (desde la carpeta raíz del repo):
-    python -m corrector.evaluar                      # errores simulados, frases de test
-    python -m corrector.evaluar --split val          # para probar ajustes sin "gastar" test
-    python -m corrector.evaluar --predicciones Modelo/notebooks/data/test_predictions.csv
-    python -m corrector.evaluar --ajustar            # busca los mejores pesos en val
-
-Reglas para que los resultados valgan:
-- El diccionario se arma SOLO con train.
-- Los ajustes (pesos, costos) se eligen mirando VAL; TEST se mira al final, una vez.
+Reglas: 
+El diccionario se arma SOLO con train
+Los ajustes (pesos, costos) se eligen mirando VAL
+TEST se mira al final, una vez
 """
 
 import argparse
@@ -47,7 +42,7 @@ def configuraciones(lm):
 
 
 def comparar(referencias, rotas, correctores):
-    """Una fila por configuración con CER/WER antes y después."""
+    #Una fila por configuración con CER/WER antes y después
     cer0, wer0 = cer_wer(referencias, rotas)
     filas = [{"configuración": "sin corregir", "CER": cer0, "WER": wer0, "seg": 0.0}]
     for nombre, corr in correctores.items():
@@ -72,7 +67,7 @@ def ejemplos(referencias, rotas, corrector, n=5, seed=0):
 
 
 def ajustar(lm, val_frases, tasa, modo):
-    """Prueba combinaciones de pesos en VAL y muestra las mejores por WER."""
+    #Prueba combinaciones de pesos en VAL y muestra las mejores por WER
     rng = random.Random(1)
     rotas = [romper(f, tasa, modo, rng) for f in val_frases]
     filas = []

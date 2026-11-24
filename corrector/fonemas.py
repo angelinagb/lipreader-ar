@@ -1,4 +1,4 @@
-"""Conversión de palabras en español a fonemas (seseo y yeísmo)."""
+#Conversion de palabras en español a fonemas (seseo y yeísmo)
 
 # Letras que se convierten siempre igual, sin mirar la siguiente
 SIMPLES = {
@@ -101,12 +101,12 @@ VISEMA = {
     "p": "bilabial",
     "b": "bilabial",
     "m": "bilabial",
-    "w": "bilabial_velar",  # diptongos con u (ej. "huevo", "agua")
+    "w": "bilabial_velar",  # diptongos con u (ej "huevo", "agua")
 
     # Labiodental
     "f": "labiodental",
 
-    # Dentales (en español t y d son dentales, no alveolares como en inglés)
+    # Dentales (en español t y d son dentales)
     "t": "dental",
     "d": "dental",
 
@@ -114,24 +114,24 @@ VISEMA = {
     "n": "alveolar",
     "s": "alveolar",
     "l": "alveolar",
-    "ɾ": "alveolar",  # r simple (ej. "caro")
-    "r": "alveolar",  # rr múltiple (ej. "carro")
+    "ɾ": "alveolar",  # r simple (ej "caro")
+    "r": "alveolar",  # rr múltiple (ej "carro")
 
     # Postalveolares
-    "tʃ": "postalveolar",  # ej. "chico"
-    "ʃ": "postalveolar",   # solo rioplatense: ll / y rehiladas (ej. "calle" -> "cashe")
+    "tʃ": "postalveolar",  # ej "chico"
+    "ʃ": "postalveolar",   # solo rioplatense: ll / y rehiladas (ej "calle" -> "cashe")
 
     # Palatales
     "ʝ": "palatal",  # ll / y con yeísmo general (ej. "calle", "yo")
-    "ɲ": "palatal",  # ej. "ñandú"
+    "ɲ": "palatal",  # ej "ñandu"
 
     # Velares
     "k": "velar",
     "g": "velar",
-    "x": "velar",  # ej. "jamón", "gente"
+    "x": "velar",  # ej "jamon", "gente"
 
     # Glotal
-    "h": "glotal",  # solo rioplatense: s aspirada (ej. "mosca" -> "mohca")
+    "h": "glotal",  # solo rioplatense: s aspirada (ej "mosca" -> "mohca" parecido a mojca)
 
     # Vocales
     "a": "vocal_a",
@@ -143,12 +143,12 @@ VISEMA = {
 
 
 def a_visemas(palabra, variante="general"):
-    """Convierte una palabra en su secuencia de visemas."""
+    #Convierte una palabra en su secuencia de visemas
     return [VISEMA[f] for f in a_fonemas(palabra, variante)]
 
 
 def pronunciaciones(palabra):
-    """Todas las pronunciaciones distintas de la palabra (general y rioplatense)."""
+    #Todas las pronunciaciones distintas de la palabra (general y rioplatense)
     return {tuple(a_fonemas(palabra, v)) for v in VARIANTES}
 
 
@@ -157,7 +157,7 @@ VISEMAS = sorted(set(VISEMA.values())) + [PAUSA]
 VISEMA_A_IDX = {v: i for i, v in enumerate(VISEMAS, start=1)}   # 0 = blank
 
 def fraseAVisema(frase):
-        """Convierte una frase en una lista de visemas, con pausas entre palabras."""
+        #Convierte una frase en una lista de visemas, con pausas entre palabras
         visemas = []
         for palabra in frase.split():
             visemas.extend(a_visemas(palabra))
@@ -165,7 +165,7 @@ def fraseAVisema(frase):
         return visemas[:-1]  
 
 def codificarVisemas(visemas):
-    """Convierte una lista de visemas en una lista de índices, con 0 = blank."""
+   #Convierte una lista de visemas en una lista de indices, 0 = blank
     return [VISEMA_A_IDX[v] for v in visemas]
 
 """
@@ -186,6 +186,4 @@ velar: la parte posterior de la lengua toca o se acerca a la velo (paladar bland
 glotal: el sonido se produce en el glottis, la abertura entre las cuerdas vocales: al cerrarla brevemente se produce el sonido ʔ. Para la h, las cuerdas vocales se mantienen separadas para permitir que el aire fluya libremente
 
 labio-velar: dos constricciones a la vez: los labios se redondean mientras que la parte posterior de la lengua se eleva hacia el velo del paladar, como en la «w». Ninguna de las dos se cierra por completo, lo que la convierte en una aproximante 
-recurso:https://melindaozel.com/es_ar/viseme-cheat-sheet/#g-kg
-Fernández-López, A. y Sukno, F. M. (2017). Automatic Viseme Vocabulary Construction to Enhance Continuous Lip-reading. VISAPP 2017, pp. 52–63. doi:10.5220/0006102100520063
 """

@@ -1,10 +1,10 @@
 """
-Distancia de Levenshtein con costos que entienden de visemas.
+Distancia de Levenshtein con costos que entienden de visemas
 
 En la distancia común, cambiar "p" por "b" cuesta lo mismo que cambiar
-"p" por "s". Pero un lector de labios confunde mucho más p/b/m (se ven
+"p" por "s". Pero un lector de labios confunde más p/b/m (se ven
 iguales) que p/s. Con estos costos, una corrección que solo cambia letras
-del mismo visema queda "más cerca" y gana.
+del mismo visema queda "más cerca" y gana
 """
 from functools import lru_cache
 
@@ -16,7 +16,7 @@ from .confusion import VACIO
 
 
 class Costos:
-    """Costos de cada operación. Los valores son un punto de partida: se ajustan con val."""
+    #Costos de cada operación. Los valores son un punto de partida: se ajustan con val
 
     def __init__(self, mismo_visema=0.4, tilde=0.1, h_muda=0.3,
                  sustitucion=1.0, insercion=1.0, borrado=1.0):
@@ -47,7 +47,7 @@ COSTOS_PLANOS = Costos(mismo_visema=1.0, tilde=1.0, h_muda=1.0)
 
 
 def distancia_ponderada(origen, destino, costos):
-    """Mínimo costo para transformar `origen` (lo que predijo el modelo) en `destino`."""
+    #Minimo costo para transformar "origen" (lo que predijo el modelo) en "destino"
     prev = [0.0]
     for c in destino:
         prev.append(prev[-1] + costos.ins(c))
@@ -64,12 +64,12 @@ def distancia_ponderada(origen, destino, costos):
 
 @lru_cache(maxsize=None)
 def _fonemas(palabra):
-    """Guarda los fonemas de cada palabra para no recalcularlos (el diccionario tiene 16.000)."""
+    #Guarda los fonemas de cada palabra para no recalcularlos 
     return tuple(a_fonemas(palabra))
 
 
 def distancia_fonemas(origen, destino, mismo_visema=0.4):
-    """Levenshtein sobre fonemas: igual fonema = 0, mismo visema = barato, distinto = 1."""
+    #Levenshtein sobre fonemas: igual fonema = 0, mismo visema = barato, distinto = 1
     a, b = _fonemas(origen), _fonemas(destino)
     prev = [float(j) for j in range(len(b) + 1)]
     for i, fa in enumerate(a, start=1):
@@ -86,7 +86,7 @@ def distancia_fonemas(origen, destino, mismo_visema=0.4):
     return prev[-1]
 
 def costos_aprendidos(conteo, k=0.1, min_casos=20):
-    """conteo: Counter {(real, pred): n}. Devuelve {(real, pred): costo}."""
+    #conteo: Counter {(real, pred): n}. Devuelve {(real, pred): costo}
     simbolos = sorted({r for r, _ in conteo} | {p for _, p in conteo})
     V = len(simbolos)
     total = Counter()

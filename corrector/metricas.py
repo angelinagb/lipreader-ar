@@ -1,8 +1,8 @@
-"""CER y WER con distancia de Levenshtein (la misma idea que el notebook 05)."""
+#CER y WER con distancia de Levenshtein
 
 
 def edit_distance(ref, hyp):
-    """Levenshtein: sirve para strings (CER) y para listas de palabras (WER)."""
+    #Levenshtein: sirve para strings (CER) y para listas de palabras (WER)
     prev = list(range(len(hyp) + 1))
     for i, r in enumerate(ref, start=1):
         cur = [i]
@@ -13,7 +13,7 @@ def edit_distance(ref, hyp):
 
 
 def cer_wer(referencias, hipotesis):
-    """CER y WER globales: errores totales / largo total (como el notebook 05)."""
+    #CER y WER globales: errores totales / largo total
     c_err = c_tot = w_err = w_tot = 0
     for ref, hyp in zip(referencias, hipotesis):
         c_err += edit_distance(ref, hyp)

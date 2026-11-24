@@ -1,4 +1,4 @@
-"""Matriz de confusión: qué letras confunde el modelo."""
+#Matriz de confusión: qué letras confunde el modelo
 
 from collections import Counter
 import pandas as pd
@@ -7,14 +7,14 @@ VACIO = "∅"
 
 
 def contar_pares(reales, preds):
-    """Alinea cada frase real con su predicción y cuenta los pares (real, pred)."""
+    #Alinea cada frase real con su predicción y cuenta los pares (real, pred)
     conteo = Counter()
     for r, p in zip(reales, preds):
         for a, b in alinear(list(r), list(p)):
             conteo[(a, b)] += 1
     return conteo
 def tabla_levenshtein(real, pred):
-    """Tabla completa de Levenshtein: D[i][j] = costo de real[:i] -> pred[:j]."""
+    #Tabla completa de Levenshtein: D[i][j] = costo de real[:i] -> pred[:j]
     n, m = len(real), len(pred)
     D = [[0] * (m + 1) for _ in range(n + 1)]
     for i in range(n + 1):
@@ -30,7 +30,7 @@ def tabla_levenshtein(real, pred):
     return D
 
 def alinear(real, pred):
-    """Devuelve la lista de pares (letra real, letra predicha), en orden."""
+    #Devuelve la lista de pares (letra real, letra predicha), en orden
     D = tabla_levenshtein(real, pred)
     i, j = len(real), len(pred)
     pares = []
@@ -48,7 +48,7 @@ def alinear(real, pred):
     return pares[::-1]   
 
 def contar_confusiones(referencias, predicciones):
-    """Cuenta los pares (real, predicho) de todas las frases."""
+    #Cuenta los pares (real, predicho) de todas las frases
     conteo = Counter()
     for real, pred in zip(referencias, predicciones):
         conteo.update(alinear(real, pred))
@@ -56,7 +56,7 @@ def contar_confusiones(referencias, predicciones):
 
 
 def matriz_confusion(conteo, orden=None):
-    """DataFrame con filas = real, columnas = predicho; cada fila suma 1."""
+    #DataFrame con filas = real, columnas = predicho donde cada fila suma 1
     filas = sorted({r for r, _ in conteo} | {p for _, p in conteo})
     orden = orden or filas
     m = pd.DataFrame(0, index=orden, columns=orden, dtype=float)

@@ -1,13 +1,13 @@
 """
 Errores simulados: "rompe" frases correctas para probar el corrector
-sin depender de las predicciones del modelo.
+sin depender de las predicciones del modelo
 
 Dos modos:
-- "azar":   cambia letras por cualquier otra.
+- "azar":   cambia letras por cualquier otra
 - "visema": cuando cambia una letra, el 70% de las veces elige una que
             se ve igual en la boca (p->b, o->u). Se parece más a cómo se
-            equivoca un lector de labios de verdad.
-No toca los espacios, así que la cantidad de palabras se mantiene.
+            equivoca un lector de labios de verdad
+No toca los espacios, así que la cantidad de palabras se mantiene
 """
 
 import random
@@ -26,7 +26,7 @@ def _parecida(c, rng):
 
 
 def romper(frase, tasa, modo="visema", rng=None):
-    """Aplica errores a aproximadamente `tasa` de las letras (0.3 = 30%)."""
+    #Aplica errores a aprox "tasa" de las letras (0.3 = 30%)
     rng = rng or random.Random(0)
     salida = []
     for c in frase:

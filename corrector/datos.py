@@ -21,7 +21,7 @@ PARQUET_POR_DEFECTO = REPO / "Modelo" / "notebooks" / "data" / "clips_metadata.p
 
 
 def cargar_splits(parquet=PARQUET_POR_DEFECTO):
-    """Devuelve un dict con los DataFrames 'train', 'val' y 'test'."""
+    #Devuelve un dict con los DataFrames 'train', 'val' y 'test'
     parquet = Path(parquet)
     if not parquet.exists():
         raise FileNotFoundError(

@@ -3,7 +3,7 @@ La palabra que se muestra se elige según
 qué tan parecida es la palabra candidata a la predicha,
 qué tan común/frecuente es y qué tan bien sigue a la antrior 
 (prob condicional)
-Predicciones muy rotas quedaran igual, palabras ue no están en train no se pueden recurepara
+Predicciones muy rotas quedan igual, palabras ue no están en train no se pueden recurepara
 y no une o separa palabras, solo corrige errores de ortografía
 """
 import math
@@ -32,7 +32,7 @@ class Corrector:
         costo_desconocida   si no es None, una palabra fuera del diccionario puede quedar igual,
                             pagando este puntaje (evita "corregir" palabras que estaban bien)    
                reducido            si True, la entrada viene reducida como la del modelo (sin tildes ni h,
-                            y→i) y el corrector devuelve la ortografía real
+                            y igual a i) y el corrector devuelve la ortografía real
          """
         if comparar not in ("letras", "fonemas","combinada", "aprendida"):
             raise ValueError("comparar debe ser 'letras' o 'fonemas' o 'combinada' o 'aprendida'")
@@ -52,7 +52,7 @@ class Corrector:
         self._candidatas = lru_cache(maxsize=200_000)(self._buscar_candidatas)
         self.reducido = reducido
     def _buscar_candidatas(self, palabra):
-        """Palabras del diccionario a distancia (común) chica, con su distancia ponderada."""
+        #Palabras del diccionario a distancia (común) chica, con su distancia ponderada
         if self.comparar == "aprendida":
             tope = len(palabra)
         else:
@@ -81,7 +81,7 @@ class Corrector:
         return p
 
     def _corregir_reducida(self, palabra, anterior):
-        """Modo reducido: la palabra viene sin tildes, sin h, etc. Devuelve la palabra REAL."""
+        #Modo reducido: la palabra viene sin tildes, sin h, etc. Devuelve la palabra REAL
         conocida = palabra in self.lm.por_reducida
         if conocida and not self.corregir_conocidas:
             candidatas = [(palabra, 0.0)]          # la forma reducida existe: solo falta elegir la real

@@ -1,15 +1,13 @@
 """
-Beam search de CTC con modelo de lenguaje de palabras (bigramas).
+Beam search de CTC con modelo de lenguaje de palabras (bigramas)
 
-El argmax elige la mejor letra en cada frame por separado y tira el resto.
-El beam search recorre los frames manteniendo las B mejores frases parciales
-("prefijos"), usando TODAS las probabilidades del modelo. Cada vez que un
-prefijo cierra una palabra (agrega un espacio), se le suma
-    alfa * log P(palabra | anterior) + beta
+El argmax elige la mejor letra en cada frame por separado y tira el resto
+Beam search recorre los frames manteniendo las B mejores frases parciales
+(prefijos), usando TODAS las probabilidades del modelo. Cada vez que un
+prefijo cierra una palabra (agrega un espacio), se le suma alfa * log P(palabra | anterior) + beta
 para empujar hacia frases que tengan sentido en español.
 
-Referencia: Hannun et al. (2014), "First-Pass Large Vocabulary Continuous
-Speech Recognition using Bi-Directional Recurrent DNNs" (prefix beam search).
+
 """
 import math
 
@@ -21,7 +19,7 @@ NEG = -1e30   # "log de 0"
 
 
 def lse(a, b):
-    """log(e^a + e^b) sin desbordes."""
+    #log(e^a + e^b) sin desborde
     if a < b:
         a, b = b, a
     if b <= NEG:
@@ -30,7 +28,7 @@ def lse(a, b):
 
 
 def _puntaje_palabra(prefijo, lm, alfa, beta):
-    """LM de la última palabra completa del prefijo (el que termina en espacio)."""
+    #LM de la ultima palabra completa del prefijo (el que termina en espacio)
     palabras = prefijo.split()
     if not palabras or lm is None:
         return 0.0
@@ -39,24 +37,24 @@ def _puntaje_palabra(prefijo, lm, alfa, beta):
 
 
 def prefijos_de(vocab):
-    """Todos los comienzos posibles de palabras del diccionario ("h", "ho", "hol", "hola"...)."""
+    #Todos los comienzos posibles de palabras del diccionario ("h", "ho", "hol", "hola",etc)
     return {w[:i] for w in vocab for i in range(1, len(w) + 1)}
 
 
 def beam_ctc(lp, idx_to_char, blank, lm=None, alfa=0.5, beta=0.0, B=16, top_c=8, prefijos=None):
     """
-    lp           matriz (T, V) de log-probabilidades del modelo para UN clip
-    idx_to_char  {índice: letra}
-    blank        índice del blank
+    lp           matriz (T, V) de log-probabilidades del modelo para UN solo clip
+    idx_to_char  {indice: letra}
+    blank        indice del blank
     lm           ModeloLenguaje (None = beam search sin modelo de lenguaje)
     alfa, beta   peso del bigrama y bono por palabra
-    B            cuántos prefijos se mantienen por frame
-    top_c        cuántas letras se prueban por frame (las más probables)
+    B            cuantos prefijos se mantienen por frame
+    top_c        cuantas letras se prueban por frame (las más probables)
     prefijos     si se pasa (ver prefijos_de), solo se permiten palabras del diccionario:
-                 un prefijo cuya palabra en curso no es comienzo de ninguna palabra se descarta,
+                 un prefijo en una palabra en curso que no es comienzo de ninguna palabra se descarta,
                  y solo se puede cerrar una palabra (espacio) si es una palabra real
     """
-    # prefijo -> [log P(terminar en blank), log P(terminar en letra)]
+    # prefijo : log P(terminar en blank), log P(terminar en letra)
     beams = {"": [0.0, NEG]}
     lm_pref = {"": 0.0}                        # puntaje LM acumulado de cada prefijo
 
@@ -71,7 +69,7 @@ def beam_ctc(lp, idx_to_char, blank, lm=None, alfa=0.5, beta=0.0, B=16, top_c=8,
 
         for pref, (pb, pnb) in beams.items():
             total = lse(pb, pnb)
-            sumar(pref, 0, total + fila[blank])                    # 1) blank: el prefijo no cambia
+            sumar(pref, 0, total + fila[blank])                    # blank: el prefijo no cambia
             ultima = pref[-1] if pref else None
             for ci in letras:
                 if ci == blank:
@@ -86,12 +84,12 @@ def beam_ctc(lp, idx_to_char, blank, lm=None, alfa=0.5, beta=0.0, B=16, top_c=8,
                     if c != " " and c != ultima and actual + c not in prefijos:
                         continue                                   # no seguir algo que no lleva a ninguna palabra
                 if c == ultima:
-                    sumar(pref, 1, pnb + p)                        # 2) misma letra seguida: se colapsa
+                    sumar(pref, 1, pnb + p)                        # misma letra seguida: se colapsa
                     if prefijos is not None and c != " " and pref.split(" ")[-1] + c not in prefijos:
                         continue                                   #    ("rr" solo si existe la palabra)
                     ext, desde = pref + c, pb                      #    letra doble solo si hubo blank en medio
                 else:
-                    ext, desde = pref + c, total                   # 3) letra nueva
+                    ext, desde = pref + c, total                   # letra nueva
                 sumar(ext, 1, desde + p)
                 if ext not in lm_pref:
                     extra = _puntaje_palabra(ext, lm, alfa, beta) if c == " " else 0.0
@@ -113,7 +111,7 @@ def beam_ctc(lp, idx_to_char, blank, lm=None, alfa=0.5, beta=0.0, B=16, top_c=8,
 
 
 def greedy_ctc(lp, idx_to_char, blank):
-    """argmax + colapso: lo mismo que hace el notebook (para comparar)."""
+    #argmax + colapso: lo mismo que hace el notebook 
     salida, anterior = [], None
     for i in lp.argmax(axis=1):
         if i != anterior and i != blank:

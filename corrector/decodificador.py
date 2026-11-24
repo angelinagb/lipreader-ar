@@ -1,11 +1,11 @@
 """
-Decodificador de frase entera.
+Decodificador de frase entera
 
 En vez de corregir palabra por palabra, busca la secuencia de palabras del
 diccionario que mejor explica TODA la secuencia de letras predicha (sin espacios):
 costo = sum( distancia_aprendida) + lam * sum( −log P(w | anterior) ) + beta * (cant de palabras)
 como el bigrama solo mira la última palabra,
-en cada posición basta guardar la mejor hipótesis por cada última palabra.
+en cada posición basta guardar la mejor hipotesis por cada última palabra
 """
 from functools import lru_cache
 
@@ -18,10 +18,10 @@ from .lenguaje import INICIO
 
 def decodificar(pred, lm, candidatas, lam=1.0, beta=1.0, B=10, LMAX=4, silenciosas=(), bono_sil=0.0):    
     """
-    candidatas(f)  lista de (palabra, distancia) para el pedazo f.
+    candidatas(f)  lista de (palabra, distancia) para el pedazo f
     silenciosas    lista de (palabra, costo_de_borrarla_entera): palabras que el
                      modelo suele comerse por completo. Se pueden insertar sin
-                     consumir letras (como mucho una seguida).
+                     consumir letras (como mucho una seguida)
     """
     s = pred.replace(" ", "")
     if not s:

@@ -1,10 +1,10 @@
 """
 Modelo de lenguaje simple: cuenta palabras (unigramas) y pares de palabras
-seguidas (bigramas) en las frases de TRAIN.
+seguidas (bigramas) en las frases de TRAIN
 
-- El unigrama dice qué tan común es una palabra ("que" >> "quepa").
-- El bigrama dice qué tan probable es una palabra después de otra
-  ("la ola" vs "la hola"): es lo que permite usar el contexto.
+Unigrama dice qué tan común es una palabra ("que" >> "quepa").
+Bigrama dice qué tan probable es una palabra despues de otra
+  ("la ola" vs "la hola"): es lo que permite usar el contexto
 """
 
 import json
@@ -44,7 +44,7 @@ class ModeloLenguaje:
         return math.log((self.bi[(prev, palabra)] + self.k)
                         / (self.antes[prev] + self.k * len(self.vocab)))
 
-    # ---------- guardar / cargar ----------
+
     def guardar(self, ruta):
         datos = {"k": self.k, "uni": self.uni,
                  "bi": {f"{a}\t{b}": n for (a, b), n in self.bi.items()}}
