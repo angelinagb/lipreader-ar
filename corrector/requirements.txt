@@ -1,0 +1,6 @@
+pandas
+pyarrow
+scikit-learn
+num2words
+rapidfuzz
+pytest
